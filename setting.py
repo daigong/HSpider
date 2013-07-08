@@ -3,7 +3,7 @@
 DEBUG = False
 
 user_name = 'root'
-password = 'daigong'
+password = 'sunmap'
 database_host = 'localhost'
 database_name = 'hspider'
 cherset = 'utf8'

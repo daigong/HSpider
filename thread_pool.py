@@ -5,9 +5,6 @@ import Queue
 import time
 import setting
 
-task_queue = Queue.Queue()
-result_queue = Queue.Queue()
-
 __DEBUG_FALG__ = setting.DEBUG
 
 

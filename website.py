@@ -21,7 +21,7 @@ class HenHenLuSearchTopicUrl(object):
         return self.topic_urls
 
 
-class HenHenluTopicUrlExer(object):
+class HenHenLuTopicUrlExer(object):
 
     def __init__(self, url, pic_type):
         self.url = url
