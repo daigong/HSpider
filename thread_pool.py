@@ -2,10 +2,8 @@
 
 import threading
 import Queue
-import time
-import setting
 
-__DEBUG_FALG__ = setting.DEBUG
+__DEBUG_FALG__ = False
 
 
 class ThreadPool(threading.Thread):
@@ -63,12 +61,3 @@ class ThreadWorker(threading.Thread):
                 self.task_queue.task_done()
 
 
-def job(name, age):
-    print "%s 's age is %s" % (name, str(age))
-    time.sleep(2)
-
-
-if __name__ == '__main__':
-    pool = ThreadPool(10)
-    pool.start()
-    pool.join()
