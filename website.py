@@ -4,6 +4,7 @@ import httplib2
 import threading
 import time
 from pyquery import PyQuery as pq
+from models import save_topic_and_imgs_to_db
 
 
 class HenHenLuSearchTopicUrl(object):
@@ -92,6 +93,7 @@ class TopicSearcherThreader(threading.Thread):
         base_url,
         start_num,
         end_num,
+        pic_type,
         ):
 
         threading.Thread.__init__(self)
@@ -106,6 +108,7 @@ class TopicSearcherThreader(threading.Thread):
         self.base_url = base_url
         self.start_num = start_num
         self.end_num = end_num
+        self.pic_type = pic_type
 
     def run(self):
         while True:
@@ -142,6 +145,30 @@ class TopicSearcherThreader(threading.Thread):
         for task_no in range(self.cur_index, self.end_index, -1):
             htu = HenHenLuSearchTopicUrl(self.base_url % str(task_no))
             self.thread_searcher_pool.add_task(self.job_function, htu,
-                    self.topic_img_searcher_pool, self.website_class)
+                    self.topic_img_searcher_pool, self.website_class,
+                    self.pic_type)
+
+
+def save_url_image_job(web_site_instance):
+    try:
+        web_site_instance.connect()
+        save_topic_and_imgs_to_db(web_site_instance)
+    except Exception, e:
+        print e
+
+
+def build_url_job(
+    search_instance,
+    topic_img_searcher_pool,
+    website_class,
+    pic_type,
+    ):
+
+    search_instance.connect()
+    urls = search_instance.get_topic_urls()
+    if len(urls) != 0:
+        for url in urls:
+            exer = website_class(url, pic_type)
+            topic_img_searcher_pool.add_task(save_url_image_job, exer)
 
 
