@@ -122,7 +122,7 @@ class TopicSearcherThreader(threading.Thread):
 
                 self.build_task()
 
-            time.sleep(20)
+            time.sleep(5)
 
     def move_next_index(self):
 
