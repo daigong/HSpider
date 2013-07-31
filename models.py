@@ -53,6 +53,47 @@ class PicImg(Base):
         self.pic_order = pic_order
 
 
+class VideoTopic(Base):
+
+    __tablename__ = 'video_topics'
+    id = Column(Integer, primary_key=True)
+    title = Column(String(255))
+    website_type = Column(String(255))
+    henhen_id = Column(String(255))
+    video_type = Column(String(255))
+    video_imgs = relationship('VideoImg')
+    video = relationship('Video')
+
+    def __init__(
+        self,
+        title,
+        website_type,
+        video_type,
+        henhen_id
+        ):
+        self.title = title
+        self.website_type = website_type
+        self.video_type = video_type
+        self.henhen_id = henhen_id
+
+
+class VideoImg(Base):
+
+    __tablename__ = 'video_imgs'
+    id = Column(Integer, primary_key=True)
+    url = Column(String(255))
+    pic_order = Column(Integer)
+    video_topic_id = Column(Integer, ForeignKey('video_topics.id'))
+
+
+class Video(Base):
+
+    __tablename__ = 'videos'
+    id = Column(Integer, primary_key=True)
+    url = Column(String(255))
+    video_topic_id = Column(Integer, ForeignKey('video_topics.id'))
+
+
 def get_session():
     return Session()
 
