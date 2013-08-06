@@ -2,11 +2,14 @@
 
 # proxy :python-socksipy  (socks)
 
-import socks
-import httplib2
+# import socks
+# import httplib2
+
 from pyquery import PyQuery as pq
 from urllib import unquote
 from util.http_utils import HttpAgent
+from models import VideoImg, Video, VideoTopic, get_session
+from thread_pool import ThreadPool
 
 
 # h = httplib2.Http(proxy_info = httplib2.ProxyInfo(socks.PROXY_TYPE_HTTP, 'localhost', 8000))
@@ -20,9 +23,12 @@ class HenHenLuQvodInfo(object):
 #                          '61.51.111.61', 8443))
 
     def __init__(self, qvod_id):
-        self.http = \
-            HttpAgent(proxy_info=httplib2.ProxyInfo(socks.PROXY_TYPE_HTTP,
-                      '218.245.6.4', 99))
+
+        # self.http = \
+        #    HttpAgent(proxy_info=httplib2.ProxyInfo(socks.PROXY_TYPE_HTTP,
+        #              '218.245.6.4', 99))
+
+        self.http = HttpAgent()
         self.qvod_id = qvod_id
         self.imgs = []
 
@@ -49,12 +55,57 @@ class HenHenLuQvodInfo(object):
         index_begin = address.find('qvod')
         index_end = address.rfind('%7C')
         url = address[index_begin:index_end + 3]
-        print unquote(url)
+        self.qvod_address = unquote(url).decode('utf-8')
+
+    def save_to_db(self):
+        session = get_session()
+        try:
+            video_topic = \
+                session.query(VideoTopic).filter(VideoTopic.henhen_id
+                    == self.qvod_id).first()
+            index_order = 0
+            for img in self.imgs:
+                video_img = VideoImg()
+                video_img.pic_order = index_order
+                video_img.url = img
+                video_img.video_topic_id = video_topic.id
+                index_order = index_order + 1
+                session.add(video_img)
+            video = Video()
+            video.video_topic_id = video_topic.id
+            video.url = self.qvod_address
+            session.add(video)
+            session.commit()
+        finally:
+            session.close()
+
+    def do_all_job(self):
+        self.get_imgs()
+        self.get_qvod_address()
+        self.save_to_db()
+        print 'qvod : %s is ok' % self.qvod_address
+
+
+def job(qvod_id):
+    info = HenHenLuQvodInfo(qvod_id)
+    info.do_all_job()
 
 
 def main():
-    info = HenHenLuQvodInfo(27038)
-    info.test()
+    info = HenHenLuQvodInfo(14)
+    info.do_all_job()
+
+
+def main1():
+    thread_pool = ThreadPool(20)
+    thread_pool.start()
+    session = get_session()
+    topic_query = \
+        session.query(VideoTopic).filter(VideoTopic.video_type == 1)
+    for topic in topic_query:
+        thread_pool.add_task(job, topic.henhen_id)
+    session.close()
+    thread_pool.wait_done()
 
 
 #    info.get_imgs()
