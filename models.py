@@ -129,3 +129,6 @@ def save_topic_and_imgs_to_db(class_can_give_info):
 
 if __name__ == '__main__':
     create_tables()
+
+#index
+#

@@ -5,7 +5,7 @@ from models import get_session, PicTopic, PicImg
 from thread_pool import ThreadPool
 from util.http_utils import HttpAgent
 
-API_URL = 'http://127.0.0.1:8000/api/new/1/'
+API_URL = 'http://127.0.0.1:8000/api/new/5/'
 
 
 class Dumper(object):
@@ -21,11 +21,11 @@ class Dumper(object):
 
 
 def main():
-    pool = ThreadPool(50)
+    pool = ThreadPool(20)
     pool.start()
     session = get_session()
     topic_query = session.query(PicTopic).filter(PicTopic.pic_type
-            == 'yazhou').order_by(PicTopic.id.desc())
+            == 'dongmantupian').order_by(PicTopic.id.desc())
     for pic_topic in topic_query:
         pool.add_task(dump_job, pic_topic)
     session.close()
