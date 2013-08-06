@@ -2,10 +2,11 @@
 
 # proxy :python-socksipy  (socks)
 
-import socks
-import httplib2
+# import socks
+
 from pyquery import PyQuery as pq
 from urllib import unquote
+from util.http_utils import HttpAgent
 
 
 # h = httplib2.Http(proxy_info = httplib2.ProxyInfo(socks.PROXY_TYPE_HTTP, 'localhost', 8000))
@@ -14,18 +15,17 @@ class HenHenLuQvodInfo(object):
 
     """QvodInfo"""
 
+#        self.http = \
+#            httplib2.Http(proxy_info=httplib2.ProxyInfo(socks.PROXY_TYPE_HTTP,
+#                          '61.51.111.61', 8443))
+
     def __init__(self, qvod_id):
-
-#        self.http = httplib2.Http(timeout=10)
-
-        self.http = \
-            httplib2.Http(proxy_info=httplib2.ProxyInfo(socks.PROXY_TYPE_HTTP,
-                          '61.51.111.61', 8443))
+        self.http = HttpAgent()
         self.qvod_id = qvod_id
         self.imgs = []
 
     def test(self):
-        (resp,content) = self.http.request('http://www.henhenlu.com')
+        (resp, content) = self.http.request('http://www.henhenlu.com')
         print resp
 
     def get_imgs(self):
@@ -53,8 +53,9 @@ class HenHenLuQvodInfo(object):
 def main():
     info = HenHenLuQvodInfo(27038)
     info.test()
+
+
 #    info.get_imgs()
 #    info.get_qvod_address()
-
 
 main()

@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
-import httplib2
 from urllib import urlencode
 from models import get_session, PicTopic, PicImg
 from thread_pool import ThreadPool
+from util.http_utils import HttpAgent
 
 API_URL = 'http://127.0.0.1:8000/api/new/1/'
 
@@ -11,7 +11,7 @@ API_URL = 'http://127.0.0.1:8000/api/new/1/'
 class Dumper(object):
 
     def __init__(self, api_url):
-        self.http = httplib2.Http()
+        self.http = HttpAgent()
         self.api_url = api_url
 
     def dump(self, subject, message):

@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 
-import httplib2
 import threading
 import time
 from pyquery import PyQuery as pq
 from models import save_topic_and_imgs_to_db
+from util.http_utils import HttpAgent
 
 
 class HenHenLuSearchTopicUrl(object):
@@ -12,7 +12,7 @@ class HenHenLuSearchTopicUrl(object):
     def __init__(self, url):
         self.url = url
         self.topic_urls = []
-        self.http = httplib2.Http(timeout=10)
+        self.http = HttpAgent(timeout=10)
 
     def connect(self):
         (reps, content) = self.http.request(self.url)
@@ -29,7 +29,7 @@ class HenHenLuTopicUrlExer(object):
     def __init__(self, url, pic_type):
         self.url = url
         self.pic_type = pic_type
-        self.http = httplib2.Http(timeout=10)
+        self.http = HttpAgent(timeout=10)
 
     def connect(self):
         (reps, content) = self.http.request(self.url)

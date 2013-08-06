@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
-import httplib2
 from pyquery import PyQuery as pq
 from thread_pool import ThreadPool
 from models import VideoTopic, get_session
+from util.http_utils import HttpAgent
 
 
 class HenHenVideoPage(object):
@@ -11,7 +11,7 @@ class HenHenVideoPage(object):
     """VideoPage """
 
     def __init__(self, url, video_type):
-        self.http = httplib2.Http(timeout=10)
+        self.http = HttpAgent(timeout=10)
         self.url = url
         self.video_type = video_type
 
@@ -48,7 +48,7 @@ class HenHenVideoPage(object):
 
 
 def check_page_max():
-    http = httplib2.Http()
+    http = HttpAgent()
     base_url = 'http://www.toutoulu.com/vodlist/7_%s.html'
     for i in range(11, 2000, 1):
         (reps, content) = http.request(base_url % str(i))
