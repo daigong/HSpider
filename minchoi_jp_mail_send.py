@@ -7,6 +7,11 @@ import contextlib
 
 # demo http://minchoi.jp/api/auth/sendauthmail/gretaky@hotmail.co.jp/19800508/
 
+# 验证用户名密码
+# https://minchoi.jp/api/auth/mail/login/bertaka@hotmail.co.jp/8bf1ssm9/
+# {"status":"000000","message":""} success
+# {"status":"ATH100104","message":"メールアドレスまたはパスワードが間違っています。"}
+
 URL_TEMPLATE = 'http://minchoi.jp/api/auth/sendauthmail/%s/%s/'
 
 FILE_NAME = '/home/daigong/git/HSpider/mail.txt'
